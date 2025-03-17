@@ -1,6 +1,6 @@
 import streamlit as st
 from autogen_core import CancellationToken
-from StreamLitChatBot.AgenticModeIndependentURL import create_team
+from AgenticModeIndependentURL import create_team
 from streamlit_console import StreamlitConsole
 import asyncio
 
@@ -52,6 +52,11 @@ with chat_container:
                                     st.image(url)
                                 except Exception as e:
                                     st.error(f"Could not load image: {e}")
+                        if "result" in content_data:
+                            if content_data["result"]["exit_code"] == 0:
+                                st.success("Execution succeeded")
+                            else:
+                                st.error(f"Execution failed with exit code: {content_data['result']['exit_code']}")
 
             elif isinstance(content_data, list):
                 st.write("### List Content:")
@@ -59,7 +64,7 @@ with chat_container:
                     st.write(f"{idx + 1}. {item}")
 
             else:
-                st.markdown(f'<div class="bot-message">{avatar} {content}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="bot-message">{content}</div>', unsafe_allow_html=True)
 
 st.markdown("""
     <style>

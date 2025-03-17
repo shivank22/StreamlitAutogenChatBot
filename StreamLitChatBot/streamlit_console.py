@@ -101,7 +101,7 @@ def _display_message(message: Union[AgentEvent, ChatMessage]) -> None:
     Displays messages in Streamlit, handling both plain text and JSON content.
     """
     try:
-        st.json(message)
+        # st.json(message)
         avatar = "🧑‍💻" if message.source == "user" else "🤖"
         avatarcls = "user" if message.source == "user" else "bot"
         content_str = str(message.content).strip()
@@ -132,6 +132,11 @@ def _display_message(message: Union[AgentEvent, ChatMessage]) -> None:
                         bot_message["images"].append(url)  # Store images in session state
                     except Exception as e:
                         st.error(f"Could not load image: {e}")
+            if "result" in content_data:
+                if content_data["result"]["exit_code"] == 0:
+                    st.success("Execution succeeded")
+                else:
+                    st.error(f"Execution failed with exit code: {content_data['result']['exit_code']}")
 
         elif isinstance(content_data, list):
             st.write("### List Content:")
